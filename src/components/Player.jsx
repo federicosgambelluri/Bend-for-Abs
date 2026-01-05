@@ -189,8 +189,9 @@ export default function Player({ duration, onExit }) {
                         display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }}
                 >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M11 19L2 12L11 5V19ZM13 5V19L22 12L13 5Z" />
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="19 20 9 12 19 4 19 20" fill="currentColor" stroke="none"></polygon>
+                        <line x1="5" y1="19" x2="5" y2="5"></line>
                     </svg>
                 </button>
 
@@ -238,9 +239,9 @@ export default function Player({ duration, onExit }) {
                         display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }}
                 >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M13 19L22 12L13 5V19ZM11 5V19L2 12L11 5Z" transform="scale(-1, 1) translate(-24, 0)" />
-                        <path d="M4 19L13 12L4 5V19ZM14 5V19L23 12L14 5Z" />
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="5 4 15 12 5 20 5 4" fill="currentColor" stroke="none"></polygon>
+                        <line x1="19" y1="5" x2="19" y2="19"></line>
                     </svg>
                 </button>
             </div>
