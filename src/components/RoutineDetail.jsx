@@ -47,7 +47,7 @@ export default function RoutineDetail({ duration, onStart, onBack }) {
                                 overflow: 'hidden',
                                 border: ex.isRest ? '1px solid #444' : 'none'
                             }}>
-                                <img src={ex.image} alt={ex.name} style={{ width: '100%', height: '100%', objectFit: 'cover', padding: '8px' }} />
+                                <img src={ex.image} alt={ex.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.3)' }} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontWeight: '600', fontSize: '16px' }}>{ex.name}</div>
