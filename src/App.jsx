@@ -1,18 +1,20 @@
-
 import React, { useState } from 'react';
 import Home from './components/Home';
 import RoutineDetail from './components/RoutineDetail';
 import Player from './components/Player';
+import SplashScreen from './components/SplashScreen';
 import './index.css';
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [duration, setDuration] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   // App States:
-  // 1. Home (duration === null)
-  // 2. Detail (duration !== null, isPlaying === false)
-  // 3. Player (duration !== null, isPlaying === true)
+  // 1. Splash Screen
+  // 2. Home (duration === null)
+  // 3. Detail (duration !== null, isPlaying === false)
+  // 4. Player (duration !== null, isPlaying === true)
 
   const handleSelectDuration = (val) => {
     setDuration(val);
@@ -27,6 +29,10 @@ function App() {
     setDuration(null);
     setIsPlaying(false);
   };
+
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
   return (
     <div className="app-container">

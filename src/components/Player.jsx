@@ -38,6 +38,18 @@ export default function Player({ duration, onExit }) {
         return () => clearInterval(interval);
     }, [isPlaying, timeLeft, currentIndex, routine, isReady]);
 
+    // Audio Context State
+    const [audioCtx, setAudioCtx] = useState(null);
+
+    useEffect(() => {
+        // Initialize AudioContext on mount (or first interaction)
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        setAudioCtx(ctx);
+        return () => {
+            if (ctx.state !== 'closed') ctx.close();
+        };
+    }, []);
+
     useEffect(() => {
         if (isPlaying && timeLeft > 0 && timeLeft <= 3) {
             playBeep();
@@ -45,7 +57,13 @@ export default function Player({ duration, onExit }) {
     }, [timeLeft, isPlaying]);
 
     const playBeep = () => {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx) return;
+
+        // Ensure context is running (needed for mobile browsers)
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
@@ -53,12 +71,12 @@ export default function Player({ duration, onExit }) {
         gainNode.connect(audioCtx.destination);
 
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime); // 800Hz beep
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime); // Increase volume
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
 
         oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.1);
+        oscillator.stop(audioCtx.currentTime + 0.15);
     };
 
     if (!isReady || routine.length === 0) return <div>Caricamento...</div>;
@@ -89,10 +107,15 @@ export default function Player({ duration, onExit }) {
                         height: '40px',
                         borderRadius: '50%',
                         cursor: 'pointer',
-                        fontSize: '20px'
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}
                 >
-                    ×
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
                 <div style={{ fontSize: '14px', fontWeight: '600' }}>
                     {currentIndex + 1} di {routine.length}
@@ -157,9 +180,18 @@ export default function Player({ duration, onExit }) {
                             setTimeLeft(routine[prev].duration);
                         }
                     }}
-                    style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '30px', cursor: 'pointer', opacity: currentIndex === 0 ? 0.3 : 1 }}
+                    style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'white',
+                        cursor: 'pointer',
+                        opacity: currentIndex === 0 ? 0.3 : 1,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}
                 >
-                    ⏮
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11 19L2 12L11 5V19ZM13 5V19L22 12L13 5Z" />
+                    </svg>
                 </button>
 
                 <button
@@ -171,14 +203,22 @@ export default function Player({ duration, onExit }) {
                         background: 'var(--card-bg)',
                         border: 'none',
                         color: 'white',
-                        fontSize: '32px',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
                 >
-                    {isPlaying ? '⏸' : '▶'}
+                    {isPlaying ? (
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="6" y="4" width="4" height="16" rx="1" />
+                            <rect x="14" y="4" width="4" height="16" rx="1" />
+                        </svg>
+                    ) : (
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M5 3.86828C5 2.54142 6.42586 1.70327 7.5857 2.34515L20.897 9.71343C22.0837 10.3702 22.0837 12.0829 20.897 12.7397L7.5857 20.108C6.42586 20.7499 5 19.9117 5 18.5849V3.86828Z" />
+                        </svg>
+                    )}
                 </button>
 
                 <button
@@ -189,9 +229,19 @@ export default function Player({ duration, onExit }) {
                             setTimeLeft(routine[next].duration);
                         }
                     }}
-                    style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '30px', cursor: 'pointer', opacity: currentIndex === routine.length - 1 ? 0.3 : 1 }}
+                    style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: 'white',
+                        cursor: 'pointer',
+                        opacity: currentIndex === routine.length - 1 ? 0.3 : 1,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}
                 >
-                    ⏭
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 19L22 12L13 5V19ZM11 5V19L2 12L11 5Z" transform="scale(-1, 1) translate(-24, 0)" />
+                        <path d="M4 19L13 12L4 5V19ZM14 5V19L23 12L14 5Z" />
+                    </svg>
                 </button>
             </div>
         </div>
