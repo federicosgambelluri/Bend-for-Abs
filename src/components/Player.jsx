@@ -1,6 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { generateRoutine } from '../data/exercises';
+
+import CompletionScreen from './CompletionScreen';
 
 export default function Player({ duration, onExit }) {
     const [routine, setRoutine] = useState([]);
@@ -9,6 +10,7 @@ export default function Player({ duration, onExit }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [showSecondImage, setShowSecondImage] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     // Improved Audio Context
     const [audioContext, setAudioContext] = useState(null);
@@ -50,7 +52,7 @@ export default function Player({ duration, onExit }) {
                 setTimeLeft(routine[nextIndex].duration);
             } else {
                 setIsPlaying(false);
-                // Completed
+                setIsCompleted(true); // Completed
             }
         }
         return () => clearInterval(interval);
@@ -96,6 +98,10 @@ export default function Player({ duration, onExit }) {
         oscillator.stop(audioContext.currentTime + 0.3);
     };
 
+    if (isCompleted) {
+        return <CompletionScreen onHome={onExit} />;
+    }
+
     if (!isReady || routine.length === 0) return <div>Caricamento...</div>;
 
     const currentExercise = routine[currentIndex];
@@ -107,9 +113,6 @@ export default function Player({ duration, onExit }) {
     // For rest, show progress to next exercise
     const displayCount = currentExercise.isRest ? currentExerciseNumber : currentExerciseNumber;
     // Wait, if rest, we are BETWEEN exercise X and X+1. User sees "Rest". Logic:
-    // If rest, we act as if we are still on previous index or preparing for next? 
-    // User requested: "1 of 15". If rest, maybe hide or show "Next: 2 of 15"
-    // Let's just show the number of the *upcoming* exercise if rest, or current if exercise.
     // If I just finished Ex 1, now Rest. Next is Ex 2. So showing "2 of 15" during rest makes sense as preparation?
     // Or just show total: "x / y" where y is total EXERCISES.
 
@@ -171,30 +174,6 @@ export default function Player({ duration, onExit }) {
                 </div>
                 <div style={{ width: '40px' }}></div>
             </div>
-
-            {/* Rest Preview Card */}
-            {currentExercise.isRest && nextExercise && (
-                <div style={{
-                    position: 'absolute',
-                    top: '90px',
-                    right: '25px',
-                    background: 'var(--card-bg)',
-                    padding: '16px 20px',
-                    borderRadius: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    boxShadow: '0 6px 16px rgba(0,0,0,0.4)',
-                    maxWidth: '220px',
-                    zIndex: 20
-                }}>
-                    <img src={nextExercise.image} alt="Next" style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }} />
-                    <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '2px' }}>Prossimo</div>
-                        <div style={{ fontSize: '16px', fontWeight: 'bold', lineHeight: '1.2' }}>{nextExercise.name}</div>
-                    </div>
-                </div>
-            )}
 
             {/* Main Content */}
             <div style={{
@@ -278,9 +257,34 @@ export default function Player({ duration, onExit }) {
                 </div>
 
                 <h2 style={{ fontSize: '28px', marginBottom: '10px' }}>{currentExercise.name}</h2>
-                <p style={{ color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '300px' }}>
-                    {currentExercise.description}
-                </p>
+
+                {!currentExercise.isRest && (
+                    <p style={{ color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '300px' }}>
+                        {currentExercise.description}
+                    </p>
+                )}
+
+                {/* Rest Preview Card - Bottom Center - Only during Rest */}
+                {currentExercise.isRest && nextExercise && (
+                    <div style={{
+                        marginTop: '20px',
+                        background: 'var(--card-bg)',
+                        padding: '16px 20px',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '14px',
+                        boxShadow: '0 6px 16px rgba(0,0,0,0.4)',
+                        width: '100%',
+                        maxWidth: '280px'
+                    }}>
+                        <img src={nextExercise.image} alt="Next" style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <div style={{ flex: 1, textAlign: 'left' }}>
+                            <div style={{ fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '2px' }}>Prossimo</div>
+                            <div style={{ fontSize: '16px', fontWeight: 'bold', lineHeight: '1.2' }}>{nextExercise.name}</div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Controls */}
@@ -344,6 +348,8 @@ export default function Player({ duration, onExit }) {
                             const next = currentIndex + 1;
                             setCurrentIndex(next);
                             setTimeLeft(routine[next].duration);
+                        } else {
+                            setIsCompleted(true);
                         }
                     }}
                     style={{
