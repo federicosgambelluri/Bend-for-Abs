@@ -1,16 +1,42 @@
-# React + Vite
+# Bend Abs - Web App di Allenamento
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un'applicazione web per l'allenamento degli addominali (Abs Workout) dal design moderno e minimale, ispirata all'estetica dell'app "Bend". Sviluppata in **React** + **Vite**.
 
-Currently, two official plugins are available:
+![App Screenshot](public/screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Funzionalità
 
-## React Compiler
+*   **Design Premium**: Interfaccia scura, colori pastello, animazioni fluide e icone vettoriali.
+*   **Routine Personalizzabili**: Scegli la durata del tuo allenamento (5, 10, 15 o 20 minuti).
+*   **Player Guidato**:
+    *   Timer visivo grande e chiaro.
+    *   Immagini esaustive per ogni esercizio.
+    *   **Audio Feedback**: Segnale acustico negli ultimi 3 secondi di ogni esercizio (funziona anche in modalità silenziosa).
+*   **PWA Ready**: Può essere installata sulla Home di iPhone/Android come una vera app (icona e splash screen dedicati).
+*   **Privacy**: Nessun tracciamento, tutto funziona nel browser.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📱 Installazione su iPhone (iOS)
 
-## Expanding the ESLint configuration
+1.  Apri il sito in **Safari**.
+2.  Tocca il tasto **Condividi** (quadrato con freccia in alto).
+3.  Scorri e seleziona **"Aggiungi alla schermata Home"**.
+4.  Troverai l'icona "Bend Abs" sulla tua home screen.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠 Tecnologia
+
+*   **Frontend**: React.js, Vite
+*   **Stile**: CSS puro (no framework pesanti)
+*   **Deployment**: GitHub Pages (automatizzato con GitHub Actions)
+
+## 🚀 Come Pubblicare (Deployment)
+
+Questo progetto è configurato per il deploy automatico su GitHub Pages.
+
+1.  **Push su GitHub**: Carica il codice sul tuo repository.
+2.  **Attiva Pages**:
+    *   Vai su `Settings` > `Pages`.
+    *   Imposta Source su **GitHub Actions**.
+3.  Fatto! Il sito sarà online in pochi minuti.
+
+---
+Sviluppato con ❤️ per l'allenamento quotidiano.
